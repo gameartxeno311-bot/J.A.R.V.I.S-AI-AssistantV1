@@ -4,101 +4,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#050505" />
-  <meta name="description" content="J.A.R.V.I.S AI Assistant control interface" />
-  <title>J.A.R.V.I.S. — Personal AI Assistant</title>
+  <meta name="description" content="J.A.R.V.I.S AI Assistant EB Interface" />
+  <title>J.A.R.V.I.S. — EB Interface</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
   <div class="scanlines" aria-hidden="true"></div>
   <div class="app-shell">
     <header class="topbar glass">
-      <div class="brand">
-        <div class="target-mark"><span></span></div>
-        <div><div class="brand-name">J.A.R.V.I.S.</div><div class="version">v2.1.0 • PERSONAL AI</div></div>
-      </div>
+      <div class="brand"><div class="target-mark"><span></span></div><div><div class="brand-name">J.A.R.V.I.S.</div><div class="version">v2.1.0 • EB INTERFACE</div></div></div>
       <div class="system-pill"><span class="live-dot"></span><div><b id="system-state">SYSTEM ONLINE</b><small id="system-detail">All systems operational</small></div></div>
-      <div class="telemetry">
-        <div><small>CORE TEMP</small><b id="temp">42°C</b><i class="spark"></i></div>
-        <div><small>CPU USAGE</small><b id="cpu">23%</b><i class="spark"></i></div>
-        <div><small>MEMORY</small><b id="memory">45%</b><i class="spark"></i></div>
-        <div><small>NETWORK</small><b>SECURE <span class="shield">◇</span></b></div>
-      </div>
+      <div class="telemetry"><div><small>CORE TEMP</small><b id="temp">42°C</b><i class="spark"></i></div><div><small>CPU USAGE</small><b id="cpu">23%</b><i class="spark"></i></div><div><small>MEMORY</small><b id="memory">45%</b><i class="spark"></i></div><div><small>NETWORK</small><b>SECURE <span class="shield">◇</span></b></div></div>
       <div class="clock"><strong id="clock">--:--:--</strong><span id="date">---</span></div>
-      <button class="icon-btn" id="notify-btn" title="Notifications">♧</button>
-      <button class="icon-btn" id="settings-btn" title="Settings">⚙</button>
+      <button class="icon-btn" id="notify-btn" title="Notifications">♧</button><button class="icon-btn" id="settings-btn" title="Settings">⚙</button>
     </header>
-
-    <aside class="sidebar panel">
-      <nav>
-        <button class="nav-item active" data-view="home"><span>⌂</span>Home</button>
-        <button class="nav-item" data-view="conversation"><span>▱</span>Conversation</button>
-        <button class="nav-item" data-view="memory"><span>◈</span>Memory</button>
-        <button class="nav-item" data-view="analytics"><span>⌁</span>Analytics</button>
-        <button class="nav-item" data-view="processes"><span>◫</span>Processes</button>
-        <button class="nav-item" data-view="tools"><span>⚒</span>Tools</button>
-        <button class="nav-item" data-view="settings"><span>⚙</span>Settings</button>
-      </nav>
-      <div class="profile"><div class="avatar">S</div><div><b id="user-label">Shadow</b><small>User Profile</small></div><span class="presence"></span></div>
-    </aside>
-
+    <aside class="sidebar panel"><nav>
+      <button class="nav-item active" data-view="home"><span>⌂</span>Home</button><button class="nav-item" data-view="conversation"><span>▱</span>Conversation</button><button class="nav-item" data-view="memory"><span>◈</span>Memory</button><button class="nav-item" data-view="analytics"><span>⌁</span>Analytics</button><button class="nav-item" data-view="processes"><span>◫</span>Processes</button><button class="nav-item" data-view="tools"><span>⚒</span>Tools</button><button class="nav-item" data-view="settings"><span>⚙</span>Settings</button>
+    </nav><div class="profile"><div class="avatar">S</div><div><b id="user-label">Shadow</b><small>User Profile</small></div><span class="presence"></span></div></aside>
     <main class="dashboard">
-      <section class="left-stack">
-        <article class="card status-card">
-          <div class="card-title">SYSTEM STATUS <button>×</button></div>
-          <div class="metric"><label>POWER <b>100%</b></label><div><span style="width:100%"></span></div></div>
-          <div class="metric"><label>CORE SYSTEMS <b>100%</b></label><div><span style="width:100%"></span></div></div>
-          <div class="metric"><label>SECURITY <b>99%</b></label><div><span style="width:99%"></span></div></div>
-          <div class="metric"><label>NETWORK <b>100%</b></label><div><span style="width:100%"></span></div></div>
-          <div class="nominal"><span class="live-dot"></span> All systems nominal</div>
-        </article>
-        <article class="card processes-card">
-          <div class="card-title">ACTIVE PROCESSES <button>×</button></div>
-          <div class="process"><span>◉</span><b>Natural Language Engine</b><em>Running</em></div>
-          <div class="process"><span>◖</span><b>Voice Synthesis Engine</b><em>Ready</em></div>
-          <div class="process"><span>▤</span><b>Memory Indexer</b><em>Running</em></div>
-          <div class="process"><span>⌁</span><b>Data Analyzer</b><em>Ready</em></div>
-          <div class="process"><span>⊕</span><b>API Connector</b><em>Running</em></div>
-          <button class="text-link" data-view="processes">View all processes ›</button>
-        </article>
-      </section>
-
-      <section class="core-area">
-        <article class="core-panel">
-          <div class="radar-grid"></div><div class="orb"><div class="orb-ring r1"></div><div class="orb-ring r2"></div><div class="orb-ring r3"></div><div class="orb-core"></div></div><div class="wave left-wave"></div><div class="wave right-wave"></div>
-          <div class="greeting"><h1>Good evening, <span id="greeting-name">Shadow</span>.</h1><p>How can I assist you tonight?</p></div>
-          <div class="voice-console">
-            <button id="mic-btn" class="mic-btn" title="Start voice input">♩</button>
-            <div class="voice-wave" id="voice-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <button id="stop-btn" class="stop-btn" title="Stop">■</button>
-            <div class="voice-label left">Tap to speak</div><div class="voice-label right">Stop</div>
-          </div>
-          <div class="quick-actions"><button data-action="analyze">⌁ Analyze Data</button><button data-action="memory">▣ Access Memory</button><button data-action="diagnostics">✣ Run Diagnostics</button><button data-action="terminal">▣ Open Terminal</button></div>
-        </article>
-        <article class="card conversation-card">
-          <div class="card-title">CONVERSATION <button id="clear-chat">×</button></div>
-          <div id="messages" class="messages"></div>
-          <form id="chat-form" class="composer"><input id="message-input" autocomplete="off" placeholder="Type your message..."/><button aria-label="Send">➤</button></form>
-        </article>
-      </section>
-
-      <section class="right-stack">
-        <article class="card notifications-card">
-          <div class="card-title">NOTIFICATIONS <button>×</button></div>
-          <div id="notifications"><div class="notification"><span>⬢</span><div><b>System Online</b><small>Assistant interface initialized.</small></div><time>now</time></div><div class="notification"><span>♧</span><div><b>Memory Ready</b><small>Persistent memory is available.</small></div><time>now</time></div><div class="notification"><span>♢</span><div><b>Security Scan</b><small>Local permission gates active.</small></div><time>now</time></div></div>
-          <button class="text-link">View all notifications ›</button>
-        </article>
-        <article class="card assistant-card">
-          <div class="card-title">ASSISTANT CORE <button>×</button></div>
-          <div class="core-id"><div class="mini-orb">✦</div><div><b>J.A.R.V.I.S. Core</b><small>v2.1.0</small></div></div>
-          <dl><dt>Uptime</dt><dd id="uptime">Initializing</dd><dt>Learning Status</dt><dd>Continuous</dd><dt>Response Time</dt><dd id="response-time">--</dd><dt>Language Model</dt><dd id="model-name">Configured server</dd></dl>
-          <button class="text-link" data-view="settings">Core Preferences ›</button>
-        </article>
-        <article class="card right-status"><div class="card-title">SYSTEM STATUS</div><div class="tiny-metric">◉ <span>Power</span><b>100%</b><i></i></div><div class="tiny-metric">◉ <span>Core Systems</span><b>100%</b><i></i></div><div class="tiny-metric">◉ <span>Security</span><b>99%</b><i></i></div><div class="tiny-metric">◉ <span>Network</span><b>100%</b><i></i></div></article>
-        <article class="card connection-card"><div class="tiny-row">♙ <div><b>CONNECTION STATUS</b><small>Secure Connection Established</small></div></div><div class="tiny-row">⌘ <div><b>API STATUS</b><small id="api-status">Checking...</small></div></div><div class="tiny-row">♢ <div><b>DATA ENCRYPTION</b><small>AES-256 Compatible Storage</small></div></div></article>
-      </section>
+      <section class="left-stack"><article class="card status-card"><div class="card-title">SYSTEM STATUS <button>×</button></div><div class="metric"><label>POWER <b>100%</b></label><div><span style="width:100%"></span></div></div><div class="metric"><label>CORE SYSTEMS <b>100%</b></label><div><span style="width:100%"></span></div></div><div class="metric"><label>SECURITY <b>99%</b></label><div><span style="width:99%"></span></div></div><div class="metric"><label>NETWORK <b>100%</b></label><div><span style="width:100%"></span></div></div><div class="nominal"><span class="live-dot"></span> All systems nominal</div></article>
+      <article class="card processes-card"><div class="card-title">ACTIVE PROCESSES <button>×</button></div><div class="process"><span>◉</span><b>Natural Language Engine</b><em>Running</em></div><div class="process"><span>◖</span><b>Voice Synthesis Engine</b><em>Ready</em></div><div class="process"><span>▤</span><b>Memory Indexer</b><em>Running</em></div><div class="process"><span>⌁</span><b>Data Analyzer</b><em>Ready</em></div><div class="process"><span>⊕</span><b>API Connector</b><em>Running</em></div><button class="text-link" data-view="processes">View all processes ›</button></article></section>
+      <section class="core-area"><article class="core-panel"><div class="radar-grid"></div><div class="orb"><div class="orb-ring r1"></div><div class="orb-ring r2"></div><div class="orb-ring r3"></div><div class="orb-core"></div></div><div class="wave left-wave"></div><div class="wave right-wave"></div><div class="greeting"><h1>Good evening, <span id="greeting-name">Shadow</span>.</h1><p>How can I assist you tonight?</p></div><div class="voice-console"><button id="mic-btn" class="mic-btn" title="Start voice input">♩</button><div class="voice-wave" id="voice-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><button id="stop-btn" class="stop-btn" title="Stop">■</button><div class="voice-label left">Tap to speak</div><div class="voice-label right">Stop</div></div><div class="quick-actions"><button data-action="analyze">⌁ Analyze Data</button><button data-action="memory">▣ Access Memory</button><button data-action="diagnostics">✣ Run Diagnostics</button><button data-action="terminal">▣ Open Terminal</button></div></article><article class="card conversation-card"><div class="card-title">CONVERSATION <button id="clear-chat">×</button></div><div id="messages" class="messages"></div><form id="chat-form" class="composer"><input id="message-input" autocomplete="off" placeholder="Type your message..."/><button aria-label="Send">➤</button></form></article></section>
+      <section class="right-stack"><article class="card notifications-card"><div class="card-title">NOTIFICATIONS <button>×</button></div><div id="notifications"><div class="notification"><span>⬢</span><div><b>System Online</b><small>Assistant interface initialized.</small></div><time>now</time></div><div class="notification"><span>♧</span><div><b>Memory Ready</b><small>Persistent memory is available.</small></div><time>now</time></div><div class="notification"><span>♢</span><div><b>Security Scan</b><small>Local permission gates active.</small></div><time>now</time></div></div><button class="text-link">View all notifications ›</button></article><article class="card assistant-card"><div class="card-title">ASSISTANT CORE <button>×</button></div><div class="core-id"><div class="mini-orb">✦</div><div><b>J.A.R.V.I.S. Core</b><small>v2.1.0</small></div></div><dl><dt>Uptime</dt><dd id="uptime">Initializing</dd><dt>Learning Status</dt><dd>Continuous</dd><dt>Response Time</dt><dd id="response-time">--</dd><dt>Language Model</dt><dd id="model-name">Configured server</dd></dl><button class="text-link" data-view="settings">Core Preferences ›</button></article><article class="card right-status"><div class="card-title">SYSTEM STATUS</div><div class="tiny-metric">◉ <span>Power</span><b>100%</b><i></i></div><div class="tiny-metric">◉ <span>Core Systems</span><b>100%</b><i></i></div><div class="tiny-metric">◉ <span>Security</span><b>99%</b><i></i></div><div class="tiny-metric">◉ <span>Network</span><b>100%</b><i></i></div></article><article class="card connection-card"><div class="tiny-row">♙ <div><b>CONNECTION STATUS</b><small>Secure Connection Established</small></div></div><div class="tiny-row">⌘ <div><b>API STATUS</b><small id="api-status">Checking...</small></div></div><div class="tiny-row">♢ <div><b>DATA ENCRYPTION</b><small>AES-256 Compatible Storage</small></div></div></article></section>
     </main>
-  </div>
-  <div id="toast" class="toast"></div>
-  <script src="/app.js" defer></script>
-</body>
-</html>
+  </div><div id="toast" class="toast"></div>
+  <script src="/app.js" defer></script><script src="/eb-interface.js" defer></script>
+</body></html>
