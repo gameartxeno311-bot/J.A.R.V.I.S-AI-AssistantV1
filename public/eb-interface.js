@@ -1,7 +1,9 @@
 (()=>{
   const $=s=>document.querySelector(s);
   const toast=t=>{const e=$('#toast');if(!e)return;e.textContent=t;e.classList.add('show');clearTimeout(window.__ebToast);window.__ebToast=setTimeout(()=>e.classList.remove('show'),2600)};
+  const installStyle=()=>{if($('#eb-mode-style'))return;const s=document.createElement('style');s.id='eb-mode-style';s.textContent=`body.eb-focus .left-stack,body.eb-focus .right-stack{display:none}body.eb-focus .dashboard{grid-template-columns:1fr}body.eb-focus .core-panel{min-height:calc(100vh - 120px)}body.eb-focus .core-area{grid-column:1}body.eb-focus .conversation-card{min-height:300px}`;document.head.appendChild(s)};
   const wire=()=>{
+    installStyle();
     const top=$('.topbar');
     if(top&&!$('#eb-mode-btn')){
       const b=document.createElement('button'); b.id='eb-mode-btn'; b.className='icon-btn'; b.title='Toggle EB interface mode'; b.textContent='EB'; b.style.fontSize='11px'; b.style.fontWeight='700';
@@ -13,7 +15,7 @@
       const ref=document.createElement('button'); ref.className='text-link'; ref.dataset.ebReference='1'; ref.textContent='Open EB visual reference ›'; ref.style.marginLeft='10px';
       ref.onclick=()=>window.open('/assets/eb-interface.svg','_blank','noopener,noreferrer'); target.parentNode.insertBefore(ref,target.nextSibling);
     }
-    document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.altKey&&e.key.toLowerCase()==='e'){e.preventDefault();document.body.classList.toggle('eb-focus');toast('EB focus mode '+(document.body.classList.contains('eb-focus')?'enabled':'disabled'))}});
+    if(!window.__ebKeys){window.__ebKeys=true;document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.altKey&&e.key.toLowerCase()==='e'){e.preventDefault();document.body.classList.toggle('eb-focus');toast('EB focus mode '+(document.body.classList.contains('eb-focus')?'enabled':'disabled'))}})}
   };
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
 })();
