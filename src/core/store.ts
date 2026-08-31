@@ -20,7 +20,7 @@ export class Store {
     if (existing && existing.user_id !== userId) throw new Error('Conversation belongs to another user');
     if (!existing) {
       const now = new Date().toISOString();
-      this.db.prepare('INSERT INTO conversations (id,user_id,created_at,updated_at) VALUES (?,?,?,?,?)').run(conversationId,userId,now,now);
+      this.db.prepare('INSERT INTO conversations (id,user_id,created_at,updated_at) VALUES (?,?,?,?)').run(conversationId,userId,now,now);
     }
   }
   addMessage(id: string, conversationId: string, role: string, content: string) {
