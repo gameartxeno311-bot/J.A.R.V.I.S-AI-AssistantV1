@@ -33,11 +33,21 @@ export class ToolRegistry {
     const resolved = path.resolve(candidate);
     return this.roots.some(root => { const r=path.resolve(root); return resolved === r || resolved.startsWith(r + path.sep); });
   }
+  async assertAllowedRealPath(candidate: string, allowMissing = false) {
+    const resolved = path.resolve(candidate);
+    if (!this.allowedPath(resolved)) throw new Error('Path is outside the allowed filesystem roots');
+    const roots = await Promise.all(this.roots.map(root => fs.realpath(root).catch(() => path.resolve(root))));
+    const target = await fs.realpath(resolved).catch(async err => {
+      if (!allowMissing || (err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
+      return fs.realpath(path.dirname(resolved));
+    });
+    if (!roots.some(root => target === root || target.startsWith(root + path.sep))) throw new Error('Path is outside the allowed filesystem roots');
+  }
 }
 
 export function registerBuiltIns(registry: ToolRegistry) {
   registry.register({ name:'system.health', description:'Return basic assistant service health.', riskLevel:'LOW', requiresConfirmation:false, timeoutMs:2000, validate:z.object({}).parse, execute:async()=>({ok:true,timestamp:new Date().toISOString()}) });
-  registry.register({ name:'filesystem.list_files', description:'List files in an explicitly allowlisted workspace directory.', riskLevel:'LOW', requiresConfirmation:false, timeoutMs:5000, validate:z.object({path:z.string().min(1)}).parse, execute:async(input)=>{if(!registry.allowedPath(input.path))throw new Error('Path is outside the allowed filesystem roots');return fs.readdir(input.path,{withFileTypes:true}).then(es=>es.map(e=>({name:e.name,type:e.isDirectory()?'directory':'file'})));} });
-  registry.register({ name:'filesystem.create_file', description:'Create a text file inside an allowlisted workspace.', riskLevel:'MEDIUM', requiresConfirmation:false, timeoutMs:5000, validate:z.object({path:z.string().min(1),content:z.string()}).parse, execute:async(input)=>{if(!registry.allowedPath(input.path))throw new Error('Path is outside the allowed filesystem roots');await fs.mkdir(path.dirname(input.path),{recursive:true});await fs.writeFile(input.path,input.content,{encoding:'utf8',flag:'wx'});return {created:true,path:path.resolve(input.path)};} });
-  registry.register({ name:'filesystem.delete_file', description:'Permanently delete a file. Confirmation is always required.', riskLevel:'HIGH', requiresConfirmation:true, timeoutMs:5000, validate:z.object({path:z.string().min(1)}).parse, execute:async(input)=>{if(!registry.allowedPath(input.path))throw new Error('Path is outside the allowed filesystem roots');await fs.unlink(input.path);return {deleted:true,path:path.resolve(input.path)};} });
+  registry.register({ name:'filesystem.list_files', description:'List files in an explicitly allowlisted workspace directory.', riskLevel:'LOW', requiresConfirmation:false, timeoutMs:5000, validate:z.object({path:z.string().min(1)}).parse, execute:async(input)=>{await registry.assertAllowedRealPath(input.path);return fs.readdir(input.path,{withFileTypes:true}).then(es=>es.map(e=>({name:e.name,type:e.isDirectory()?'directory':'file'})));} });
+  registry.register({ name:'filesystem.create_file', description:'Create a text file inside an allowlisted workspace.', riskLevel:'MEDIUM', requiresConfirmation:false, timeoutMs:5000, validate:z.object({path:z.string().min(1),content:z.string()}).parse, execute:async(input)=>{await registry.assertAllowedRealPath(input.path,true);await fs.mkdir(path.dirname(input.path),{recursive:true});await fs.writeFile(input.path,input.content,{encoding:'utf8',flag:'wx'});return {created:true,path:path.resolve(input.path)};} });
+  registry.register({ name:'filesystem.delete_file', description:'Permanently delete a file. Confirmation is always required.', riskLevel:'HIGH', requiresConfirmation:true, timeoutMs:5000, validate:z.object({path:z.string().min(1)}).parse, execute:async(input)=>{await registry.assertAllowedRealPath(input.path);await fs.unlink(input.path);return {deleted:true,path:path.resolve(input.path)};} });
 }
