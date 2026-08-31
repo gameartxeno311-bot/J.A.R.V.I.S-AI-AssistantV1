@@ -6,16 +6,16 @@ import type { ToolContext, ToolDefinition } from './types.js';
 import { Store } from './store.js';
 
 export class ToolRegistry {
-  private tools = new Map<string, ToolDefinition>();
+  private tools = new Map<string, ToolDefinition<any, any>>();
   constructor(private readonly store: Store, private readonly roots: string[]) {}
-  register(tool: ToolDefinition) { this.tools.set(tool.name, tool); }
+  register<T, R>(tool: ToolDefinition<T, R>) { this.tools.set(tool.name, tool); }
   get(name: string) { return this.tools.get(name); }
   list() { return [...this.tools.values()].map(t => ({name:t.name,description:t.description,riskLevel:t.riskLevel,requiresConfirmation:t.requiresConfirmation})); }
   async execute(name: string, input: unknown, context: ToolContext, confirmed = false) {
     const tool = this.tools.get(name);
     if (!tool) { this.auditFailure(context, name, 'UNKNOWN_TOOL', input, 'CRITICAL'); throw new Error(`Unknown tool: ${name}`); }
     if (tool.requiresConfirmation && !confirmed) { this.auditFailure(context, name, 'CONFIRMATION_REQUIRED', input, tool.riskLevel); throw new Error(`Confirmation required for ${name}`); }
-    let parsed: unknown;
+    let parsed: any;
     try { parsed = tool.validate(input); } catch (err) { this.auditFailure(context, name, 'VALIDATION_FAILED', input, tool.riskLevel); throw err; }
     try {
       const result = await Promise.race([tool.execute(parsed, context), new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Tool timeout')), tool.timeoutMs))]);
