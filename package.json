@@ -11,7 +11,7 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
-    "better-sqlite3": "^11.10.0",
+    "better-sqlite3": "^12.4.1",
     "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "zod": "^4.1.5"
