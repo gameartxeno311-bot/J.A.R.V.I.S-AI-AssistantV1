@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import type { AgentPlan, AssistantConfig, LLMProvider, ToolContext } from './types.js';
+import type { AgentPlan, AssistantConfig, LLMProvider } from './types.js';
 import { Store } from './store.js';
 import { ToolRegistry } from './tools.js';
 
@@ -10,15 +10,20 @@ export class Agent {
 
   async handle(userId: string, conversationId: string, text: string) {
     const requestId = randomUUID();
-    const context: ToolContext = {userId, conversationId, requestId};
+    this.store.ensureConversation(conversationId, userId);
     const memories = this.config.privacyMode ? [] : this.store.searchMemories(userId, text);
-    const history = this.store.getMessages(conversationId);
+    const history = this.store.getMessages(conversationId, userId);
     const system = `${BASE_IDENTITY}\nAssistant name: ${this.config.assistantName}.\nVerbosity: ${this.config.verbosity}.\nMemory context: ${JSON.stringify(memories)}`;
-    const reply = await this.llm.generate({system,messages:[...history.map(m=>({role:m.role,content:m.content})),{role:'user',content:text}]});
-    this.store.addMessage(randomUUID(), conversationId, 'user', text);
-    this.store.addMessage(randomUUID(), conversationId, 'assistant', reply);
-    this.store.audit({id:randomUUID(),requestId,userId,action:'assistant.message',riskLevel:'LOW',success:true,details:{conversationId}});
-    return {requestId, conversationId, reply};
+    try {
+      const reply = await this.llm.generate({system,messages:[...history.map(m=>({role:m.role,content:m.content})),{role:'user',content:text}]});
+      this.store.addMessage(randomUUID(), conversationId, 'user', text);
+      this.store.addMessage(randomUUID(), conversationId, 'assistant', reply);
+      this.store.audit({id:randomUUID(),requestId,userId,action:'assistant.message',riskLevel:'LOW',success:true,details:{conversationId}});
+      return {requestId, conversationId, reply};
+    } catch (err) {
+      this.store.audit({id:randomUUID(),requestId,userId,action:'assistant.message',riskLevel:'LOW',success:false,details:{conversationId,error:err instanceof Error ? err.message : 'LLM failed'}});
+      throw err;
+    }
   }
 
   async plan(goal: string): Promise<AgentPlan> {
