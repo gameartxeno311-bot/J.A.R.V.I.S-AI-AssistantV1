@@ -1,0 +1,36 @@
+name: iOS Branch Test
+
+on:
+  push:
+    branches:
+      - ios-version
+  pull_request:
+    branches:
+      - ios-version
+
+jobs:
+  test-ios-branch:
+    name: Test iOS Branch
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run check
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
