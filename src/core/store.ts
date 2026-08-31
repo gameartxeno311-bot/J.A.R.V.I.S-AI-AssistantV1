@@ -15,12 +15,21 @@ export class Store {
       CREATE TABLE IF NOT EXISTS audit_logs (id TEXT PRIMARY KEY, request_id TEXT, user_id TEXT, action TEXT NOT NULL, risk_level TEXT, success INTEGER NOT NULL, details TEXT, created_at TEXT NOT NULL);
     `);
   }
+  ensureConversation(conversationId: string, userId: string) {
+    const existing = this.db.prepare('SELECT user_id FROM conversations WHERE id = ?').get(conversationId) as {user_id:string} | undefined;
+    if (existing && existing.user_id !== userId) throw new Error('Conversation belongs to another user');
+    if (!existing) {
+      const now = new Date().toISOString();
+      this.db.prepare('INSERT INTO conversations (id,user_id,created_at,updated_at) VALUES (?,?,?,?,?)').run(conversationId,userId,now,now);
+    }
+  }
   addMessage(id: string, conversationId: string, role: string, content: string) {
     const now = new Date().toISOString();
     this.db.prepare('INSERT INTO messages VALUES (?, ?, ?, ?, ?)').run(id, conversationId, role, content, now);
+    this.db.prepare('UPDATE conversations SET updated_at = ? WHERE id = ?').run(now, conversationId);
   }
-  getMessages(conversationId: string, limit = 20) {
-    return this.db.prepare('SELECT role, content, created_at FROM messages WHERE conversation_id = ? ORDER BY created_at DESC LIMIT ?').all(conversationId, limit).reverse() as Array<{role:string;content:string;created_at:string}>;
+  getMessages(conversationId: string, userId: string, limit = 20) {
+    return this.db.prepare('SELECT m.role, m.content, m.created_at FROM messages m JOIN conversations c ON c.id = m.conversation_id WHERE m.conversation_id = ? AND c.user_id = ? ORDER BY m.created_at DESC LIMIT ?').all(conversationId, userId, limit).reverse() as Array<{role:string;content:string;created_at:string}>;
   }
   addMemory(m: {id:string; userId:string; type:MemoryType; scope:MemoryScope; content:string; importance:number; confidence:number; metadata?:Record<string,unknown>}) {
     const now = new Date().toISOString();
@@ -28,6 +37,7 @@ export class Store {
   }
   searchMemories(userId: string, query: string, limit = 8) {
     const tokens = query.toLowerCase().split(/\W+/).filter(Boolean).slice(0, 8);
+    if (!tokens.length) return [];
     const rows = this.db.prepare('SELECT * FROM memories WHERE user_id = ? ORDER BY importance DESC, updated_at DESC LIMIT 100').all(userId) as Array<any>;
     return rows.filter(r => tokens.some(t => String(r.content).toLowerCase().includes(t))).slice(0, limit);
   }
