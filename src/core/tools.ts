@@ -37,10 +37,21 @@ export class ToolRegistry {
     const resolved = path.resolve(candidate);
     if (!this.allowedPath(resolved)) throw new Error('Path is outside the allowed filesystem roots');
     const roots = await Promise.all(this.roots.map(root => fs.realpath(root).catch(() => path.resolve(root))));
-    const target = await fs.realpath(resolved).catch(async err => {
+    let target: string;
+    try {
+      target = await fs.realpath(resolved);
+    } catch (err) {
       if (!allowMissing || (err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
-      return fs.realpath(path.dirname(resolved));
-    });
+      let current = path.dirname(resolved);
+      while (current !== path.dirname(current)) {
+        try { target = await fs.realpath(current); break; }
+        catch (parentErr) {
+          if ((parentErr as NodeJS.ErrnoException).code !== 'ENOENT') throw parentErr;
+          current = path.dirname(current);
+        }
+      }
+      if (!target!) target = await fs.realpath(current);
+    }
     if (!roots.some(root => target === root || target.startsWith(root + path.sep))) throw new Error('Path is outside the allowed filesystem roots');
   }
 }
