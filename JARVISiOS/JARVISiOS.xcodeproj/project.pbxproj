@@ -1,8 +1,28 @@
 // !$*UTF8*$!
 {
  archiveVersion = 1;
+ classes = {};
  objectVersion = 56;
  objects = {
+  000000000000000000000001 = { isa = PBXProject; buildConfigurationList = 000000000000000000000010; mainGroup = 000000000000000000000002; productRefGroup = 000000000000000000000003; targets = (000000000000000000000020); compatibilityVersion = "Xcode 14.0"; developmentRegion = en; knownRegions = (en, Base); projectDirPath = ""; projectRoot = ""; };
+  000000000000000000000002 = { isa = PBXGroup; children = (000000000000000000000004, 000000000000000000000003); sourceTree = "<group>"; };
+  000000000000000000000003 = { isa = PBXGroup; children = (000000000000000000000040); name = Products; sourceTree = "<group>"; };
+  000000000000000000000004 = { isa = PBXGroup; children = (000000000000000000000030,000000000000000000000031); path = JARVISiOS; sourceTree = "<group>"; };
+  000000000000000000000020 = { isa = PBXNativeTarget; name = JARVISiOS; productName = JARVISiOS; productType = "com.apple.product-type.application"; buildConfigurationList = 000000000000000000000011; buildPhases = (000000000000000000000050,000000000000000000000051,000000000000000000000052); productReference = 000000000000000000000040; };
+  000000000000000000000030 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JARVISiOSApp.swift; sourceTree = "<group>"; };
+  000000000000000000000031 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+  000000000000000000000040 = { isa = PBXFileReference; explicitFileType = wrapper.application; path = JARVISiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+  000000000000000000000050 = { isa = PBXSourcesBuildPhase; files = (000000000000000000000060,000000000000000000000061); };
+  000000000000000000000051 = { isa = PBXFrameworksBuildPhase; files = (); };
+  000000000000000000000052 = { isa = PBXResourcesBuildPhase; files = (); };
+  000000000000000000000060 = { isa = PBXBuildFile; fileRef = 000000000000000000000030; };
+  000000000000000000000061 = { isa = PBXBuildFile; fileRef = 000000000000000000000031; };
+  000000000000000000000010 = { isa = XCConfigurationList; buildConfigurations = (000000000000000000000100,000000000000000000000101); defaultConfigurationName = Release; };
+  000000000000000000000011 = { isa = XCConfigurationList; buildConfigurations = (000000000000000000000110,000000000000000000000111); defaultConfigurationName = Release; };
+  000000000000000000000100 = { isa = XCBuildConfiguration; buildSettings = { PRODUCT_NAME = JARVISiOS; }; name = Debug; };
+  000000000000000000000101 = { isa = XCBuildConfiguration; buildSettings = { PRODUCT_NAME = JARVISiOS; }; name = Release; };
+  000000000000000000000110 = { isa = XCBuildConfiguration; buildSettings = { PRODUCT_BUNDLE_IDENTIFIER = com.jarvis.assistant; PRODUCT_NAME = JARVISiOS; SWIFT_VERSION = 5.0; IPHONEOS_DEPLOYMENT_TARGET = 16.0; TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; }; name = Debug; };
+  000000000000000000000111 = { isa = XCBuildConfiguration; buildSettings = { PRODUCT_BUNDLE_IDENTIFIER = com.jarvis.assistant; PRODUCT_NAME = JARVISiOS; SWIFT_VERSION = 5.0; IPHONEOS_DEPLOYMENT_TARGET = 16.0; TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; }; name = Release; };
  };
  rootObject = 000000000000000000000001;
 }
