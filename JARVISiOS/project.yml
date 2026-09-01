@@ -3,6 +3,7 @@ options:
   deploymentTarget:
     iOS: "16.0"
   bundleIdPrefix: com.jarvis
+  createIntermediateGroups: true
 settings:
   SWIFT_VERSION: 5.0
 targets:
@@ -17,3 +18,4 @@ targets:
       PRODUCT_NAME: JARVISiOS
       INFOPLIST_KEY_CFBundleDisplayName: J.A.R.V.I.S
       TARGETED_DEVICE_FAMILY: "1"
+      GENERATE_INFOPLIST_FILE: YES
