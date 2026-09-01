@@ -11,9 +11,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Install XcodeGen
+        run: brew install xcodegen
       - name: Xcode version
         run: xcodebuild -version
-      - name: Build iOS app
+      - name: Generate Xcode project
+        run: xcodegen generate --spec JARVISiOS/project.yml --project JARVISiOS/JARVISiOS.xcodeproj
+      - name: Build unsigned iOS app
         run: |
           xcodebuild \
             -project JARVISiOS/JARVISiOS.xcodeproj \
@@ -23,4 +27,16 @@ jobs:
             -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
+            CONFIGURATION_BUILD_DIR="$PWD/build" \
             build
+      - name: Package unsigned IPA
+        run: |
+          test -d build/JARVISiOS.app
+          mkdir -p Payload
+          cp -R build/JARVISiOS.app Payload/
+          /usr/bin/ditto -c -k --sequesterRsrc --keepParent Payload JARVISiOS-unsigned.ipa
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JARVISiOS-unsigned-ipa
+          path: JARVISiOS-unsigned.ipa
