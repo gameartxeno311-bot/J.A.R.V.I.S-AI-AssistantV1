@@ -17,5 +17,6 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.jarvis.assistant
       PRODUCT_NAME: JARVISiOS
       INFOPLIST_KEY_CFBundleDisplayName: J.A.R.V.I.S
+      INFOPLIST_KEY_NSCameraUsageDescription: J.A.R.V.I.S uses the camera for visual analysis.
       TARGETED_DEVICE_FAMILY: "1"
       GENERATE_INFOPLIST_FILE: YES
