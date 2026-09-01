@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: jarvis-assistant-app
+    runtime: docker
+    branch: ios-version
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/assistant/status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_PATH
+        value: /data/jarvis.sqlite
+      - key: ALLOWED_FILESYSTEM_ROOTS
+        value: /app/workspace
+      - key: LLM_PROVIDER
+        value: stub
+      - key: STT_PROVIDER
+        value: none
+      - key: TTS_PROVIDER
+        value: none
