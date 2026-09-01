@@ -1,7 +1,7 @@
 name: JARVISiOS
 options:
   deploymentTarget:
-    iOS: "16.0"
+    iOS: "17.0"
   bundleIdPrefix: com.jarvis
   createIntermediateGroups: true
 settings:
