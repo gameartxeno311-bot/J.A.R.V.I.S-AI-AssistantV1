@@ -1,0 +1,19 @@
+name: JARVISiOS
+options:
+  deploymentTarget:
+    iOS: "16.0"
+  bundleIdPrefix: com.jarvis
+settings:
+  SWIFT_VERSION: 5.0
+targets:
+  JARVISiOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: JARVISiOSApp.swift
+      - path: ContentView.swift
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.jarvis.assistant
+      PRODUCT_NAME: JARVISiOS
+      INFOPLIST_KEY_CFBundleDisplayName: J.A.R.V.I.S
+      TARGETED_DEVICE_FAMILY: "1"
