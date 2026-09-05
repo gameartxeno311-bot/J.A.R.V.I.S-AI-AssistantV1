@@ -19,10 +19,9 @@ export interface AssistantConfig {
   voicePitch: number;
   voiceVolume: number;
   voiceLanguage: string;
-  speechProvider: 'browser' | 'elevenlabs';
-  elevenLabsApiKey?: string;
-  elevenLabsVoiceId?: string;
-  elevenLabsModel?: string;
+  speechProvider: 'browser' | 'groq';
+  groqTtsVoice?: string;
+  groqTtsModel?: string;
   customVoiceFileName?: string;
   customVoiceUrl?: string;
   groqApiKey?: string;
