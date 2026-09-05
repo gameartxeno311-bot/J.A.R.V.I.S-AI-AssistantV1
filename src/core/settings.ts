@@ -1,0 +1,38 @@
+import type { AssistantConfig } from './types.js';
+
+export const DEFAULT_SETTINGS: AssistantConfig = {
+  assistantName: 'J.A.R.V.I.S.',
+  userName: 'Shadow',
+  preferredFormOfAddress: '',
+  personalityMode: 'professional-aide',
+  verbosity: 'balanced',
+  humorLevel: 0.15,
+  proactivityLevel: 0.4,
+  confirmationPolicy: 'confirm-high-risk',
+  timezone: 'UTC',
+  privacyMode: false,
+  voiceEnabled: true,
+  voiceName: '',
+  voiceRate: 0.98,
+  voicePitch: 0.92,
+  voiceVolume: 1,
+  voiceLanguage: 'en-US',
+  notificationsEnabled: true,
+  soundEffectsEnabled: true,
+  theme: 'red',
+};
+
+export type PersistedSettings = AssistantConfig;
+
+export function normalizeSettings(input: Partial<AssistantConfig>): AssistantConfig {
+  const s = {...DEFAULT_SETTINGS, ...input};
+  s.assistantName = String(s.assistantName || DEFAULT_SETTINGS.assistantName).trim().slice(0, 80);
+  s.userName = String(s.userName ?? '').trim().slice(0, 80);
+  s.preferredFormOfAddress = String(s.preferredFormOfAddress ?? '').trim().slice(0, 80);
+  s.humorLevel = Math.max(0, Math.min(1, Number(s.humorLevel)));
+  s.proactivityLevel = Math.max(0, Math.min(1, Number(s.proactivityLevel)));
+  s.voiceRate = Math.max(0.5, Math.min(2, Number(s.voiceRate)));
+  s.voicePitch = Math.max(0, Math.min(2, Number(s.voicePitch)));
+  s.voiceVolume = Math.max(0, Math.min(1, Number(s.voiceVolume)));
+  return s;
+}
