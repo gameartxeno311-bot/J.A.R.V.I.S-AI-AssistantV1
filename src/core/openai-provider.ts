@@ -35,7 +35,7 @@ export class OpenAILLM implements LLMProvider {
       input: [
         { role: 'system', content: input.system },
         ...input.messages.map((message) => ({
-          role: message.role === 'assistant' ? 'assistant' : 'user',
+          role: message.role === 'assistant' ? ('assistant' as const) : ('user' as const),
           content: message.content,
         })),
       ],
@@ -54,7 +54,7 @@ export class OpenAILLM implements LLMProvider {
       input: [
         { role: 'system', content: `${input.system}\nReturn only data matching the supplied JSON schema.` },
         ...input.messages.map((message) => ({
-          role: message.role === 'assistant' ? 'assistant' : 'user',
+          role: message.role === 'assistant' ? ('assistant' as const) : ('user' as const),
           content: message.content,
         })),
       ],
@@ -62,7 +62,7 @@ export class OpenAILLM implements LLMProvider {
         format: {
           type: 'json_schema',
           name: 'jarvis_structured_output',
-          strict: true,
+          strict: false,
           schema: input.schema as Record<string, unknown>,
         },
       },
