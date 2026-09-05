@@ -19,6 +19,8 @@ export interface AssistantConfig {
   voicePitch: number;
   voiceVolume: number;
   voiceLanguage: string;
+  customVoiceFileName?: string;
+  customVoiceUrl?: string;
   notificationsEnabled: boolean;
   soundEffectsEnabled: boolean;
   theme: 'red' | 'amber' | 'cyan' | 'green';
