@@ -1,4 +1,5 @@
 import { pathToFileURL } from 'node:url';
+import { StubLLM } from './agent.js';
 import type { AssistantConfig, LLMProvider } from './types.js';
 
 export function validateLLMProvider(value: unknown): LLMProvider {
@@ -10,10 +11,8 @@ export function validateLLMProvider(value: unknown): LLMProvider {
 }
 
 export async function loadLLMProvider(config: AssistantConfig, adapterDir: string): Promise<LLMProvider> {
-  if (!config.llmAdapterEnabled || !config.llmAdapterFileName) return (await import('./agent.js')).StubLLM ? new (await import('./agent.js')).StubLLM() : validateLLMProvider({});
+  if (!config.llmAdapterEnabled || !config.llmAdapterFileName) return new StubLLM();
   if (!/^[a-zA-Z0-9._-]+\.(mjs|js)$/i.test(config.llmAdapterFileName)) throw new Error('Invalid LLM adapter filename.');
-  const filePath = `${adapterDir}/${config.llmAdapterFileName}`;
-  const moduleUrl = pathToFileURL(filePath).href + `?v=${encodeURIComponent(config.llmAdapterFileName)}`;
-  const imported = await import(moduleUrl);
-  return validateLLMProvider(imported);
+  const moduleUrl = pathToFileURL(`${adapterDir}/${config.llmAdapterFileName}`).href + `?v=${Date.now()}`;
+  return validateLLMProvider(await import(moduleUrl));
 }
