@@ -12,7 +12,7 @@ export function validateLLMProvider(value: unknown): LLMProvider {
 }
 
 export async function loadLLMProvider(config: AssistantConfig, adapterDir: string): Promise<LLMProvider> {
-  if (process.env.LLM_PROVIDER?.trim().toLowerCase() === 'groq') return new GroqLLM();
+  if (process.env.LLM_PROVIDER?.trim().toLowerCase() === 'groq' || config.groqApiKey?.trim()) return new GroqLLM(config);
   if (!config.llmAdapterEnabled || !config.llmAdapterFileName) return new StubLLM();
   if (!/^[a-zA-Z0-9._-]+\.(mjs|js)$/i.test(config.llmAdapterFileName)) throw new Error('Invalid LLM adapter filename.');
   const moduleUrl = pathToFileURL(`${adapterDir}/${config.llmAdapterFileName}`).href + `?v=${Date.now()}`;
