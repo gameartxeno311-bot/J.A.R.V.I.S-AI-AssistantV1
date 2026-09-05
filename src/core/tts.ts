@@ -1,32 +1,29 @@
 import type { AssistantConfig } from './types.js';
 
-const ELEVENLABS_URL = 'https://api.elevenlabs.io/v1/text-to-speech';
+const GROQ_TTS_URL = 'https://api.groq.com/openai/v1/audio/speech';
 
 export async function synthesizeSpeech(text: string, settings: AssistantConfig): Promise<{audio: ArrayBuffer; contentType: string}> {
-  const apiKey = settings.elevenLabsApiKey?.trim() || process.env.ELEVENLABS_API_KEY?.trim();
-  const voiceId = settings.elevenLabsVoiceId?.trim() || process.env.ELEVENLABS_VOICE_ID?.trim();
-  const modelId = settings.elevenLabsModel?.trim() || process.env.ELEVENLABS_MODEL?.trim() || 'eleven_multilingual_v2';
-  if (!apiKey) throw new Error('ElevenLabs API key is not configured. Add it in Settings > Independent JARVIS Voice.');
-  if (!voiceId) throw new Error('ElevenLabs voice ID is not configured. Add it in Settings > Independent JARVIS Voice.');
+  const apiKey = settings.groqApiKey?.trim() || process.env.GROQ_API_KEY?.trim();
+  const model = settings.groqTtsModel?.trim() || process.env.GROQ_TTS_MODEL?.trim() || 'canopylabs/orpheus-v1-english';
+  const voice = settings.groqTtsVoice?.trim() || process.env.GROQ_TTS_VOICE?.trim() || 'troy';
+  if (!apiKey) throw new Error('Groq API key is not configured. Add it in Settings > Groq LLM.');
+  if (text.trim().length > 200) throw new Error('Groq Orpheus TTS accepts a maximum of 200 characters per speech request.');
 
-  const response = await fetch(`${ELEVENLABS_URL}/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`, {
+  const response = await fetch(GROQ_TTS_URL, {
     method: 'POST',
-    headers: {'xi-api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg'},
+    headers: {'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'Accept': 'audio/wav'},
     body: JSON.stringify({
-      text: text.slice(0, 5000),
-      model_id: modelId,
-      language_code: settings.voiceLanguage?.split('-')[0] || undefined,
-      voice_settings: {
-        stability: 0.5,
-        similarity_boost: 0.8,
-        speed: Math.min(1.2, Math.max(0.7, Number(settings.voiceRate || 1))),
-      },
+      model,
+      input: text.trim(),
+      voice,
+      response_format: 'wav',
+      speed: Math.min(5, Math.max(0.5, Number(settings.voiceRate || 1))),
     }),
   });
 
   if (!response.ok) {
     const detail = (await response.text()).slice(0, 500);
-    throw new Error(`Independent voice provider returned ${response.status}${detail ? `: ${detail}` : ''}`);
+    throw new Error(`Groq TTS returned ${response.status}${detail ? `: ${detail}` : ''}`);
   }
-  return {audio: await response.arrayBuffer(), contentType: response.headers.get('content-type') || 'audio/mpeg'};
+  return {audio: await response.arrayBuffer(), contentType: response.headers.get('content-type') || 'audio/wav'};
 }
