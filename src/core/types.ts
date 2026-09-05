@@ -21,6 +21,8 @@ export interface AssistantConfig {
   voiceLanguage: string;
   customVoiceFileName?: string;
   customVoiceUrl?: string;
+  groqApiKey?: string;
+  groqModel?: string;
   llmAdapterEnabled: boolean;
   llmAdapterName: string;
   llmAdapterFileName: string;
