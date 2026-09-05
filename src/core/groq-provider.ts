@@ -1,4 +1,4 @@
-import type { LLMProvider } from './types.js';
+import type { AssistantConfig, LLMProvider } from './types.js';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const DEFAULT_MODEL = 'openai/gpt-oss-20b';
@@ -9,10 +9,10 @@ export class GroqLLM implements LLMProvider {
   private readonly apiKey: string;
   private readonly model: string;
 
-  constructor() {
-    this.apiKey = process.env.GROQ_API_KEY?.trim() ?? '';
-    this.model = process.env.GROQ_MODEL?.trim() || DEFAULT_MODEL;
-    if (!this.apiKey) throw new Error('GROQ_API_KEY is not configured. Add it to the server environment; never put it in frontend code.');
+  constructor(config?: Partial<AssistantConfig>) {
+    this.apiKey = config?.groqApiKey?.trim() || process.env.GROQ_API_KEY?.trim() || '';
+    this.model = config?.groqModel?.trim() || process.env.GROQ_MODEL?.trim() || DEFAULT_MODEL;
+    if (!this.apiKey) throw new Error('Groq API key is not configured. Add it in Settings > Groq LLM.');
   }
 
   async generate(input: { system: string; messages: ChatMessage[] }): Promise<string> {
