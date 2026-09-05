@@ -19,9 +19,14 @@ export interface AssistantConfig {
   voicePitch: number;
   voiceVolume: number;
   voiceLanguage: string;
-  speechProvider: 'browser' | 'groq';
+  voiceAutoPlay: boolean;
+  voiceStyle: string;
+  voiceInstructions: string;
+  speechProvider: 'browser' | 'groq' | 'openai';
   groqTtsVoice?: string;
   groqTtsModel?: string;
+  openaiTtsVoice?: string;
+  openaiTtsModel?: string;
   customVoiceFileName?: string;
   customVoiceUrl?: string;
   groqApiKey?: string;
