@@ -21,19 +21,15 @@ export interface AssistantConfig {
   voiceLanguage: string;
   customVoiceFileName?: string;
   customVoiceUrl?: string;
+  llmAdapterEnabled: boolean;
+  llmAdapterName: string;
+  llmAdapterFileName: string;
   notificationsEnabled: boolean;
   soundEffectsEnabled: boolean;
   theme: 'red' | 'amber' | 'cyan' | 'green';
 }
 
-export interface EventEnvelope {
-  type: string;
-  timestamp: string;
-  source: string;
-  content: unknown;
-  metadata?: Record<string, unknown>;
-}
-
+export interface EventEnvelope { type: string; timestamp: string; source: string; content: unknown; metadata?: Record<string, unknown>; }
 export interface ToolContext { userId: string; conversationId?: string; requestId: string; }
 export interface ToolDefinition<T = unknown, R = unknown> { name:string; description:string; riskLevel:RiskLevel; requiresConfirmation:boolean; timeoutMs:number; validate(input:unknown):T; execute(input:T,context:ToolContext):Promise<R>; }
 export interface PlanStep { id:string; description:string; tool?:string; input?:unknown; status:'pending'|'running'|'completed'|'failed'|'cancelled'; }
