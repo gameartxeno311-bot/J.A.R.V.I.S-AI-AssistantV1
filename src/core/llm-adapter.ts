@@ -1,5 +1,6 @@
 import { pathToFileURL } from 'node:url';
 import { StubLLM } from './agent.js';
+import { GroqLLM } from './groq-provider.js';
 import type { AssistantConfig, LLMProvider } from './types.js';
 
 export function validateLLMProvider(value: unknown): LLMProvider {
@@ -11,6 +12,7 @@ export function validateLLMProvider(value: unknown): LLMProvider {
 }
 
 export async function loadLLMProvider(config: AssistantConfig, adapterDir: string): Promise<LLMProvider> {
+  if (process.env.LLM_PROVIDER?.trim().toLowerCase() === 'groq') return new GroqLLM();
   if (!config.llmAdapterEnabled || !config.llmAdapterFileName) return new StubLLM();
   if (!/^[a-zA-Z0-9._-]+\.(mjs|js)$/i.test(config.llmAdapterFileName)) throw new Error('Invalid LLM adapter filename.');
   const moduleUrl = pathToFileURL(`${adapterDir}/${config.llmAdapterFileName}`).href + `?v=${Date.now()}`;
