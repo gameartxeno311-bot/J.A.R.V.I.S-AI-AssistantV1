@@ -13,6 +13,15 @@ export interface AssistantConfig {
   confirmationPolicy: 'safe-default' | 'confirm-high-risk' | 'confirm-all-actions';
   timezone: string;
   privacyMode: boolean;
+  voiceEnabled: boolean;
+  voiceName: string;
+  voiceRate: number;
+  voicePitch: number;
+  voiceVolume: number;
+  voiceLanguage: string;
+  notificationsEnabled: boolean;
+  soundEffectsEnabled: boolean;
+  theme: 'red' | 'amber' | 'cyan' | 'green';
 }
 
 export interface EventEnvelope {
@@ -23,37 +32,8 @@ export interface EventEnvelope {
   metadata?: Record<string, unknown>;
 }
 
-export interface ToolContext {
-  userId: string;
-  conversationId?: string;
-  requestId: string;
-}
-
-export interface ToolDefinition<T = unknown, R = unknown> {
-  name: string;
-  description: string;
-  riskLevel: RiskLevel;
-  requiresConfirmation: boolean;
-  timeoutMs: number;
-  validate(input: unknown): T;
-  execute(input: T, context: ToolContext): Promise<R>;
-}
-
-export interface PlanStep {
-  id: string;
-  description: string;
-  tool?: string;
-  input?: unknown;
-  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
-}
-
-export interface AgentPlan {
-  goal: string;
-  steps: PlanStep[];
-}
-
-export interface LLMProvider {
-  generate(input: { system: string; messages: Array<{ role: string; content: string }> }): Promise<string>;
-  structuredOutput<T>(input: { system: string; messages: Array<{ role: string; content: string }>; schema: unknown }): Promise<T>;
-  healthCheck(): Promise<boolean>;
-}
+export interface ToolContext { userId: string; conversationId?: string; requestId: string; }
+export interface ToolDefinition<T = unknown, R = unknown> { name:string; description:string; riskLevel:RiskLevel; requiresConfirmation:boolean; timeoutMs:number; validate(input:unknown):T; execute(input:T,context:ToolContext):Promise<R>; }
+export interface PlanStep { id:string; description:string; tool?:string; input?:unknown; status:'pending'|'running'|'completed'|'failed'|'cancelled'; }
+export interface AgentPlan { goal:string; steps:PlanStep[]; }
+export interface LLMProvider { generate(input:{system:string;messages:Array<{role:string;content:string}>}):Promise<string>; structuredOutput<T>(input:{system:string;messages:Array<{role:string;content:string}>;schema:unknown}):Promise<T>; healthCheck():Promise<boolean>; }
